@@ -1,6 +1,9 @@
+import Layout from "../components/Layout"
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <h1>NExt js APP</h1>
+    <Layout>
+      <h1>NExt js APP</h1>
+    </Layout>
   )
 }
