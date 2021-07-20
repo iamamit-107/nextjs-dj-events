@@ -1,12 +1,12 @@
 import EventItem from "@/components/EventItem";
 import Layout from "@/components/Layout";
-import { API_URL } from "../config";
+import { API_URL } from "@/config/index";
 
-export default function HomePage({ events }) {
+export default function EventsPage({ events }) {
   console.log(events);
   return (
     <Layout>
-      <h1>Upcoming Events</h1>
+      <h1>All Events</h1>
 
       {events.length === 0 && <h2>No events found</h2>}
 
@@ -23,7 +23,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      events: events.slice(0, 3),
+      events,
     },
     revalidate: 1,
   };
