@@ -1,4 +1,6 @@
 import Layout from "@/components/Layout";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { API_URL } from "@/config/index";
 import { useRouter } from "next/router";
 import styles from "@/styles/Event.module.css";
@@ -7,8 +9,22 @@ import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Image from "next/image";
 
 export default function SingleEvent({ evt }) {
-  const deleteEvent = (e) => {
-    console.log("Delete Events");
+  const router = useRouter();
+
+  const deleteEvent = async (e) => {
+    if (confirm("Are you sure ?")) {
+      const res = await fetch(`${API_URL}/events/${evt.id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error("Something Went Wrong");
+      } else {
+        router.push("/events");
+      }
+    }
   };
 
   return (
