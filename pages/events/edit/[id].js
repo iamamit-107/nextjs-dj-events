@@ -9,6 +9,8 @@ import { useState } from "react";
 import { API_URL } from "@/config/index";
 import Image from "next/image";
 import { FaImage } from "react-icons/fa";
+import Modal from "@/components/Modal";
+import ImageUpload from "@/components/ImageUpload";
 
 export default function AddEvent({ evt }) {
   const [values, setValues] = useState({
@@ -22,8 +24,10 @@ export default function AddEvent({ evt }) {
   });
 
   const [imagePreview, setImagePreview] = useState(
-    evt ? evt.image.formats.thumbnail.url : null
+    evt.image ? evt.image.formats.thumbnail.url : null
   );
+
+  const [showModal, setShowModal] = useState(false);
 
   const router = useRouter();
 
@@ -56,6 +60,13 @@ export default function AddEvent({ evt }) {
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
+  };
+
+  const uploadImage = async (e) => {
+    const res = await fetch(`${API_URL}/events/${evt.id}`);
+    const data = await res.json();
+    setImagePreview(data.image.formats.thumbnail.url);
+    setShowModal(false);
   };
 
   return (
@@ -152,10 +163,14 @@ export default function AddEvent({ evt }) {
         <h3>No image to preview</h3>
       )}
       <div>
-        <button className="btn-secondary">
+        <button className="btn-secondary" onClick={() => setShowModal(true)}>
           <FaImage /> Set Image
         </button>
       </div>
+
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <ImageUpload evtId={evt.id} uploadImage={uploadImage} />
+      </Modal>
     </Layout>
   );
 }
