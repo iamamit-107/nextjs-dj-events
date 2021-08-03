@@ -1,8 +1,6 @@
 import moment from "moment";
 import Layout from "@/components/Layout";
 import styles from "@/styles/Form.module.css";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -71,8 +69,6 @@ export default function AddEvent({ evt }) {
 
   return (
     <Layout title="Add new events">
-      <ToastContainer />
-
       <Link href="/events">
         <a>Go Back</a>
       </Link>
