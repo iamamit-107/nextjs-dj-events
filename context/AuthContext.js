@@ -14,7 +14,25 @@ export const AuthProvider = ({ children }) => {
   // Persist the logged in user
   useEffect(() => loginUserCheck(), []);
 
-  const register = async (user) => {};
+  const register = async (user) => {
+    const res = await fetch(`${NEXT_URL}/api/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setUser(data.user);
+      router.push("/auth/dashboard");
+    } else {
+      setError(data.message);
+      setError(null);
+    }
+  };
 
   const login = async ({ email: identifier, password }) => {
     const res = await fetch(`${NEXT_URL}/api/login`, {

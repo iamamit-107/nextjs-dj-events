@@ -14,7 +14,12 @@ export default function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    login({ email, password });
+
+    if (password !== confirmPassword) {
+      toast.error("Password do not match");
+    } else {
+      login({ email, password });
+    }
   };
 
   useEffect(() => error && toast.error(error), [error]);
