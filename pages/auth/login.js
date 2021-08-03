@@ -2,8 +2,9 @@ import Layout from "@/components/Layout";
 import AuthContext from "@/context/AuthContext";
 import styles from "@/styles/AuthForm.module.css";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const { login, error } = useContext(AuthContext);
@@ -15,6 +16,9 @@ export default function LoginPage() {
     e.preventDefault();
     login({ email, password });
   };
+
+  useEffect(() => error && toast.error(error), [error]);
+
   return (
     <Layout title="Login User">
       <div className={styles.auth}>
