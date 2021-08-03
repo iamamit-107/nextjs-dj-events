@@ -1,12 +1,18 @@
+import { useRouter } from "next/router";
 import { NEXT_URL } from "../config/index";
 
-const { createContext, useState } = require("react");
+const { createContext, useState, useEffect } = require("react");
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+
+  const router = useRouter();
+
+  // Persist the logged in user
+  useEffect(() => loginUserCheck(), []);
 
   const register = async (user) => {};
 
@@ -26,6 +32,7 @@ export const AuthProvider = ({ children }) => {
 
     if (res.ok) {
       setUser(data.user);
+      router.push("/auth/dashboard");
     } else {
       setError(data.message);
       setError(null);
@@ -37,7 +44,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginUserCheck = async (user) => {
-    console.log("Check");
+    const res = await fetch(`${NEXT_URL}/api/user`);
+    const data = await res.json();
+
+    if (res.ok) {
+      setUser(data);
+    } else {
+      setUser(null);
+    }
   };
 
   return (
