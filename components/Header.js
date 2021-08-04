@@ -32,7 +32,7 @@ export default function Header() {
                 </Link>
               </li>
               <li>
-                <Link href="/account/dashboard">
+                <Link href="/auth/dashboard">
                   <a>Dashboard</a>
                 </Link>
               </li>

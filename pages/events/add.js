@@ -4,8 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { API_URL } from "@/config/index";
+import { toast } from "react-toastify";
+import parseCookie from "helpers";
 
-export default function AddEvent() {
+export default function AddEvent({ token }) {
   const [values, setValues] = useState({
     name: "",
     performers: "",
@@ -33,10 +35,15 @@ export default function AddEvent() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(values),
     });
     if (!res.ok) {
+      if (res.status === 401 || res.status === 403) {
+        toast.error("No token included");
+        return;
+      }
       toast.error("Something went wrong");
     } else {
       const evt = await res.json();
@@ -135,4 +142,14 @@ export default function AddEvent() {
       </form>
     </Layout>
   );
+}
+
+export async function getServerSideProps({ req }) {
+  const { token } = parseCookie(req);
+
+  return {
+    props: {
+      token,
+    },
+  };
 }
