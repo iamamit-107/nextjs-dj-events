@@ -2,7 +2,7 @@ import styles from "@/styles/Form.module.css";
 import { useState } from "react";
 import { API_URL } from "../config/index";
 
-export default function ImageUpload({ evtId, uploadImage }) {
+export default function ImageUpload({ evtId, uploadImage, token }) {
   const [image, setImage] = useState(null);
 
   console.log(image);
@@ -21,6 +21,9 @@ export default function ImageUpload({ evtId, uploadImage }) {
 
     const res = await fetch(`${API_URL}/upload`, {
       method: "POST",
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
       body: fomrData,
     });
 

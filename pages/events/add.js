@@ -41,7 +41,7 @@ export default function AddEvent({ token }) {
     });
     if (!res.ok) {
       if (res.status === 401 || res.status === 403) {
-        toast.error("No token included");
+        toast.error("Unauthorized");
         return;
       }
       toast.error("Something went wrong");

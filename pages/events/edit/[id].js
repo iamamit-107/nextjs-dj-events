@@ -9,8 +9,10 @@ import Image from "next/image";
 import { FaImage } from "react-icons/fa";
 import Modal from "@/components/Modal";
 import ImageUpload from "@/components/ImageUpload";
+import { toast } from "react-toastify";
+import parseCookie from "helpers";
 
-export default function AddEvent({ evt }) {
+export default function AddEvent({ evt, token }) {
   const [values, setValues] = useState({
     name: evt.name,
     performers: evt.performers,
@@ -44,10 +46,15 @@ export default function AddEvent({ evt }) {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(values),
     });
     if (!res.ok) {
+      if (res.status === 401 || res.status === 403) {
+        toast.error("Unauthorized");
+        return;
+      }
       toast.error("Something went wrong");
     } else {
       const evt = await res.json();
@@ -165,7 +172,7 @@ export default function AddEvent({ evt }) {
       </div>
 
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <ImageUpload evtId={evt.id} uploadImage={uploadImage} />
+        <ImageUpload evtId={evt.id} uploadImage={uploadImage} token={token} />
       </Modal>
     </Layout>
   );
@@ -175,11 +182,14 @@ export async function getServerSideProps({ params: { id }, req }) {
   const res = await fetch(`${API_URL}/events/${id}`);
   const evt = await res.json();
 
+  const { token } = parseCookie(req);
+
   console.log(req.headers.cookie);
 
   return {
     props: {
       evt: evt,
+      token,
     },
   };
 }
