@@ -1,10 +1,28 @@
 import Layout from "@/components/Layout";
 import { API_URL } from "@/config/index";
 import parseCookie from "helpers";
+import styles from "@/styles/Dashboard.module.css";
+import DashboardEvent from "@/components/DashboardEvent";
 
-export default function DashboardPage({ data }) {
-  console.log(data);
-  return <Layout></Layout>;
+export default function DashboardPage({ events }) {
+  const handleDelete = () => {};
+  return (
+    <Layout title="User Dashboard">
+      <div className={styles.dashboard}>
+        <h1>Dashboard</h1>
+        <h3>My Events</h3>
+
+        {events &&
+          events.map((evt) => (
+            <DashboardEvent
+              key={evt.id}
+              evt={evt}
+              handleDelete={handleDelete}
+            />
+          ))}
+      </div>
+    </Layout>
+  );
 }
 
 export async function getServerSideProps({ req }) {
@@ -21,7 +39,7 @@ export async function getServerSideProps({ req }) {
 
   return {
     props: {
-      data,
+      events: data,
     },
   };
 }
